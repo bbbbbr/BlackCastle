@@ -5,6 +5,7 @@
 
 #include <gbdk/incbin.h>
 
+#ifndef MEGADUCK32K
 INCBIN(level2_tiles, "res/level2_tiles.chr")
 INCBIN_EXTERN(level2_tiles)
 
@@ -28,3 +29,4 @@ INCBIN(level2_meta_lookup_bl, "res/level2_meta_lookup_bl.bin")
 INCBIN_EXTERN(level2_meta_lookup_bl)
 INCBIN(level2_meta_lookup_br, "res/level2_meta_lookup_br.bin")
 INCBIN_EXTERN(level2_meta_lookup_br)
+#endif // #ifndef MEGADUCK32K

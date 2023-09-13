@@ -1,24 +1,43 @@
+// #ifndef MEGADUCK32K
 #pragma bank 255
+// #endif
 
 #include "global.h"
 #include "data.h"
 
 #include <gbdk/incbin.h>
 
-INCBIN(level1_tiles, "res/level1_tiles.chr")
-INCBIN_EXTERN(level1_tiles)
+#ifndef MEGADUCK32K
+    INCBIN(level1_tiles, "res/level1_tiles.chr")
+    INCBIN_EXTERN(level1_tiles)
 
-INCBIN(level1_1_map, "res/level_1_1_map_meta.bin")
-INCBIN_EXTERN(level1_1_map)
+    INCBIN(level1_1_map, "res/level_1_1_map_meta.bin")
+    INCBIN_EXTERN(level1_1_map)
 
-INCBIN(level1_2_map, "res/level_1_2_map_meta.bin")
-INCBIN_EXTERN(level1_2_map)
+    INCBIN(level1_2_map, "res/level_1_2_map_meta.bin")
+    INCBIN_EXTERN(level1_2_map)
 
-INCBIN(level1_3_map, "res/level_1_3_map_meta.bin")
-INCBIN_EXTERN(level1_3_map)
+    INCBIN(level1_3_map, "res/level_1_3_map_meta.bin")
+    INCBIN_EXTERN(level1_3_map)
 
-INCBIN(level1_4_map, "res/level_1_4_map_meta.bin")
-INCBIN_EXTERN(level1_4_map)
+    INCBIN(level1_4_map, "res/level_1_4_map_meta.bin")
+    INCBIN_EXTERN(level1_4_map)
+#else
+    INCBIN(level1_tiles, "res/level1_tiles.chr.gbcomp")
+    INCBIN_EXTERN(level1_tiles)
+
+    INCBIN(level1_1_map, "res/level_1_1_map_meta.bin.gbcomp")
+    INCBIN_EXTERN(level1_1_map)
+
+    INCBIN(level1_2_map, "res/level_1_2_map_meta.bin.gbcomp")
+    INCBIN_EXTERN(level1_2_map)
+
+    INCBIN(level1_3_map, "res/level_1_3_map_meta.bin.gbcomp")
+    INCBIN_EXTERN(level1_3_map)
+
+    INCBIN(level1_4_map, "res/level_1_4_map_meta.bin.gbcomp")
+    INCBIN_EXTERN(level1_4_map)
+#endif // #ifndef MEGADUCK32K
 
 INCBIN(level1_meta_lookup_tl, "res/level1_meta_lookup_tl.bin")
 INCBIN_EXTERN(level1_meta_lookup_tl)

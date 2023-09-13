@@ -1,5 +1,7 @@
 #include <gbdk/platform.h>
 #include <gbdk/incbin.h>
+#include <gbdk/gbdecompress.h>
+#include <stdint.h>
 
 #include "global.h"
 
@@ -23,6 +25,13 @@ UBYTE shake;
 
 // Rolling buffer storing 32 columns of the level
 UBYTE buf[512];
+
+#ifdef MEGADUCK32K
+    // Max size used is 512 for level1_tiles
+    // uint8_t decompress_buf[512];
+    // Max size used is 1024 for the level_N_N_map_meta.bin
+    uint8_t decompress_buf[1024];
+#endif
 
 //level
 const unsigned char *level_data;
@@ -121,7 +130,9 @@ const level_t levels[] = {
                 .boss_typ = BT_BAT
             }
         }
-    },{
+    },
+    #ifndef MEGADUCK32K
+    {
         .bank_tiles = BANK(level2_tiles),
         .tiles = level2_tiles,
         .bank_sprites = BANK(sprite_tiles),
@@ -218,6 +229,7 @@ const level_t levels[] = {
             }
         }
     }
+    #endif // #ifndef MEGADUCK32K
 };
 
 void copy_map_column_to_buf(UBYTE pos)
@@ -259,16 +271,25 @@ void init_title(void)
     level_min = 1;
 
     //background
-    SET_BANK(BANK(title_tiles));
-    set_bkg_data(0,177, title_tiles);
-    w = 0;
-    for( i = 0; i != 20; i++ )
-    {
-        set_bkg_tiles(VIEWPORT_X_OFS + i, VIEWPORT_Y_OFS, 1, 18, &title_map[w]);
-        w += 18;
-    }
-    move_bkg(0,0);
-    RESTORE_BANK();
+    #ifndef MEGADUCK32K
+        SET_BANK(BANK(title_tiles));
+        set_bkg_data(0,177, title_tiles);
+        w = 0;
+        for( i = 0; i != 20; i++ )
+        {
+            set_bkg_tiles(VIEWPORT_X_OFS + i, VIEWPORT_Y_OFS, 1, 18, &title_map[w]);
+            w += 18;
+        }
+        move_bkg(0,0);
+        RESTORE_BANK();
+    #else
+        SET_BANK(BANK(title_tiles));
+        gb_decompress_bkg_data(0,title_tiles);
+        // gb_decompress(title_map, decompress_buf);
+        // set_bkg_tiles(0,0,20,18, decompress_buf);
+        set_bkg_tiles(0,0,20,18, title_map);
+        RESTORE_BANK();
+    #endif
 
     //set high score
     for( i = 0; i != 4; i++ )
@@ -385,19 +406,35 @@ void init_level(void)
     set_2bpp_palette(COMPAT_PALETTE(0,1,4,3));
 #endif
     // Player/player shots/monsters which can flip
-    set_sprite_data(0, ST_NUM_FLIP, current_level->sprites);
+    #ifndef MEGADUCK32K
+        set_sprite_data(0, ST_NUM_FLIP, current_level->sprites);
+    #else
+        // Can't set number to decompress, so hopefully it's the right amount (ST_NUM_FLIP)
+        gb_decompress_sprite_data(0, current_level->sprites);
+    #endif
 #ifdef SEGA
     // Mirror sprite tiles in SW in second half of tile table, as we lack sprite flipping in HW
     set_sprite_data_flipx(ST_NUM_FLIP, ST_NUM_FLIP, current_level->sprites);
 #endif
     // These sprite tiles don't need mirroring
     // Leave gap of 2 8x16 tiles to avoid boss tiles overwriting them
-    set_sprite_data(2*ST_NUM_FLIP + 4, ST_NUM_NOFLIP, current_level->sprites_noflip);
+    #ifndef MEGADUCK32K
+        set_sprite_data(2*ST_NUM_FLIP + 4, ST_NUM_NOFLIP, current_level->sprites_noflip);
+    #else
+        // Can't set number to decompress, so hopefully it's the right amount (ST_NUM_NOFLIP)
+        gb_decompress_sprite_data(2*ST_NUM_FLIP + 4, current_level->sprites_noflip);
+    #endif
 
     if(level_min == 4)
     {
-        // Boss sprite tiles (no flipping needed - overwrite monster tiles)
-        set_sprite_data(ST_BOSS_BAT0 & 0xFE, ST_NUM_BOSS, current_level->sprites_bosses);
+        #ifndef MEGADUCK32K
+            // Boss sprite tiles (no flipping needed - overwrite monster tiles)
+            set_sprite_data(ST_BOSS_BAT0 & 0xFE, ST_NUM_BOSS, current_level->sprites_bosses);
+        #else
+            // Boss sprite tiles (no flipping needed - overwrite monster tiles)
+            // Can't set number to decompress, so hopefully it's the right amount (ST_NUM_FLIP) ST_NUM_BOSS
+            gb_decompress_sprite_data(ST_BOSS_BAT0 & 0xFE, current_level->sprites_bosses);
+        #endif
     }
 
 #if defined(CLIP_SPRITES_X) || defined(CLIP_SPRITES_Y)
@@ -437,7 +474,12 @@ void init_level(void)
 #ifdef SEGA
     set_2bpp_palette(COMPAT_PALETTE(0,1,2,3));
 #endif
-    set_bkg_data(32,51, current_level->hud_tiles);
+    #ifdef MEGADUCK32K
+        set_bkg_data(32,51, current_level->hud_tiles);
+    #else
+        // Can't set number to decompress, so hopefully it's the right amount (51)
+        gb_decompress_bkg_data(32, current_level->hud_tiles);
+    #endif
     w = 0;
     for( i = 0; i != 20; i++ )
     {
@@ -453,14 +495,26 @@ void init_level(void)
     update_hud(HUD_WEAPON);
     update_hud(HUD_LEVEL);
 
-    // level tiles
-    SET_BANK(current_level->bank_tiles);
-    set_bkg_data(0, 32, current_level->tiles);
-
     // level stage maps, data and settings
-    SET_BANK(current_stage->bank_map);
-    level_data = current_stage->data;
-    level_len = current_stage->len;
+    #ifndef MEGADUCK32K
+        // level tiles
+        SET_BANK(current_level->bank_tiles);
+        set_bkg_data(0, 32, current_level->tiles);
+
+        SET_BANK(current_stage->bank_map);
+        level_data = current_stage->data;
+        level_len = current_stage->len;
+    #else
+        // level tiles
+        SET_BANK(current_level->bank_tiles);
+        gb_decompress_bkg_data(0,current_level->tiles);
+
+        // decompress map
+        SET_BANK(current_stage->bank_map);
+        gb_decompress(current_stage->data, decompress_buf);
+        level_data = decompress_buf;
+        level_len = current_stage->len;
+    #endif // #ifndef MEGADUCK32K
 
     if (current_stage->boss_typ) {
         new_boss(current_stage->boss_x, current_stage->boss_y, current_stage->boss_typ);
@@ -695,6 +749,7 @@ void draw_level(void)
                     move_sprite_clip(boss_spr1,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 16);
                     move_sprite_clip(boss_spr2,  SPRITE_OFS_X + boss_x + 16, SPRITE_OFS_Y + boss_y + 16);
                     break;
+            #ifndef MEGADUCK32K
                 case BT_MINOTAUR:
                     move_sprite_clip(boss_spr0,  SPRITE_OFS_X + boss_x,      SPRITE_OFS_Y + boss_y + 16);
                     move_sprite_clip(boss_spr1,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 16);
@@ -709,6 +764,7 @@ void draw_level(void)
                     move_sprite_clip(boss_spr2,  SPRITE_OFS_X + boss_x,      SPRITE_OFS_Y + boss_y + 32);
                     move_sprite_clip(boss_spr3,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 32);
                     break;
+            #endif // #ifndef MEGADUCK32K
             }
 
 
@@ -720,6 +776,7 @@ void draw_level(void)
                     hide_sprite(boss_spr1);
                     hide_sprite(boss_spr2);
                     break;
+            #ifndef MEGADUCK32K
                 case BT_MINOTAUR:
                     hide_sprite(boss_spr0);
                     hide_sprite(boss_spr1);
@@ -734,6 +791,7 @@ void draw_level(void)
                     hide_sprite(boss_spr2);
                     hide_sprite(boss_spr3);
                     break;
+            #endif // #ifndef MEGADUCK32K
             }
         }
     }
@@ -848,10 +906,18 @@ void enter_level(void)
             DISPLAY_OFF;
             level_maj++;
             level_min = 1;
-            if( level_maj == 4 )
-            {
-                game_state = GS_END;
-            }
+            #ifndef MEGADUCK32K
+                if( level_maj == 4 )
+                {
+                    game_state = GS_END;
+                }
+            #else
+                // Only 1 level in megaduck 32k
+                if( level_maj == 2 )
+                {
+                    game_state = GS_END;
+                }
+            #endif
             break;
         }
 

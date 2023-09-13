@@ -167,6 +167,7 @@ const unsigned char level1_music_rythm[] =
     0
 };
 
+#ifndef MEGADUCK32K
 const unsigned char level2_music_lead[] =
 {
     //A
@@ -326,6 +327,8 @@ const unsigned char level3_music_rythm[] =
     1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_LOWEST,15,0x00,1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_LOWEST,15,0x00,1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_HIGHER,49,0x00,1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_LOWEST,15,0x00,1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_HIGHER,15,0x00,1,NOISE_LOOPED | NOISE_MID,1,NOISE_LOOPED | NOISE_LOWEST,15,0x00,
     0
 };
+
+#endif // #ifndef MEGADUCK32K
 
 const unsigned char end_music_lead[] =
 {

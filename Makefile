@@ -10,7 +10,7 @@ LCC = $(GBDK_HOME)bin/lcc
 # Set platforms to build here, spaced separated. (These are in the separate Makefile.targets)
 # They can also be built/cleaned individually: "make gg" and "make gg-clean"
 # Possible are: gb gbc pocket sms gg
-TARGETS=nes gb megaduck gg sms pocket
+TARGETS=gb megaduck #nes gb megaduck gg sms pocket
 
 # Configure platform specific LCC flags here:
 LCCFLAGS_gb      = -Wl-yt0x19 -Wm-yn"$(PROJECTNAME)"
@@ -31,6 +31,10 @@ LCCFLAGS += -Wl-u
 CFLAGS = -Wf-Iinclude -Wf-MMD
 CFLAGS += -debug
 
+ifdef MEGADUCK32K
+CFLAGS += -Wf-DMEGADUCK32K
+# CFLAGS += -Wf--max-allocs-per-node500000
+endif
 
 # You can set the name of the ROM file here
 PROJECTNAME = blackcastle
@@ -52,6 +56,10 @@ OBJS        = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
 DEPS = $(OBJS:%.o=%.d)
 
 -include $(DEPS)
+
+megaduck32k:
+	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes
+	${MAKE} build-target PORT=sm83 PLAT=gb EXT=gb MEGADUCK32K=yes
 
 # Builds all targets sequentially
 all: $(TARGETS)

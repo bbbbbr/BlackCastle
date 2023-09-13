@@ -43,6 +43,7 @@ void new_boss(UBYTE x, UBYTE y, UBYTE type) BANKED
                 set_sprite_tile(boss_spr1,ST_BOSS_BAT1);
                 set_sprite_tile(boss_spr2,ST_BOSS_BAT2);
                 break;
+        #ifndef MEGADUCK32K
             case BT_MINOTAUR:
                 boss_lif = 70;
                 boss_cnt = (rand() & 3) + 3;
@@ -76,6 +77,7 @@ void new_boss(UBYTE x, UBYTE y, UBYTE type) BANKED
                 set_sprite_tile(boss_spr2,ST_BOSS_REAPER2);
                 set_sprite_tile(boss_spr3,ST_BOSS_REAPER3);
                 break;
+        #endif // #ifndef MEGADUCK32K
         }
         boss_typ = type;
         boss_ani = 0;
@@ -212,6 +214,7 @@ void update_boss_bat(void)
     }
 }
 
+#ifndef MEGADUCK32K
 void update_boss_minotaur(void)
 {
     UBYTE tile_x, tile_y, tile;
@@ -524,6 +527,7 @@ void update_boss_reaper(void)
         }
     }
 }
+#endif // #ifndef MEGADUCK32K
 
 void update_boss(void) BANKED
 {
@@ -545,12 +549,14 @@ void update_boss(void) BANKED
                     case BT_BAT:
                         update_boss_bat();
                         break;
+                #ifndef MEGADUCK32K
                     case BT_MINOTAUR:
                         update_boss_minotaur();
                         break;
                     case BT_REAPER:
                         update_boss_reaper();
                         break;
+                #endif // #ifndef MEGADUCK32K
                 }
                 break;
             case BS_END:
@@ -564,6 +570,7 @@ void update_boss(void) BANKED
                             clear_sprite(boss_spr1);
                             clear_sprite(boss_spr2);
                             break;
+                    #ifndef MEGADUCK32K
                         case BT_MINOTAUR:
                             clear_sprite(boss_spr0);
                             clear_sprite(boss_spr1);
@@ -578,6 +585,7 @@ void update_boss(void) BANKED
                             clear_sprite(boss_spr2);
                             clear_sprite(boss_spr3);
                             break;
+                    #endif // #ifndef MEGADUCK32K
                     }
                     
                     add_score(0x20);                

@@ -5,15 +5,32 @@
 
 #include <gbdk/incbin.h>
 
-INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr")
-INCBIN_EXTERN(sprite_tiles)
-INCBIN(sprite_tiles_noflip, "res/sprite_tiles_noflip.chr")
-INCBIN_EXTERN(sprite_tiles_noflip)
-INCBIN(sprite_tiles_bosses, "res/sprite_tiles_bosses.chr")
-INCBIN_EXTERN(sprite_tiles_bosses)
+#ifndef MEGADUCK32K
+    INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr")
+    INCBIN_EXTERN(sprite_tiles)
 
-INCBIN(hud_tiles, "res/hud_tiles.chr")
-INCBIN_EXTERN(hud_tiles)
+    INCBIN(sprite_tiles_noflip, "res/sprite_tiles_noflip.chr")
+    INCBIN_EXTERN(sprite_tiles_noflip)
+
+    INCBIN(sprite_tiles_bosses, "res/sprite_tiles_bosses.chr")
+    INCBIN_EXTERN(sprite_tiles_bosses)
+
+    INCBIN(hud_tiles, "res/hud_tiles.chr")
+    INCBIN_EXTERN(hud_tiles)
+#else
+    INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr.gbcomp")
+    INCBIN_EXTERN(sprite_tiles)
+
+    INCBIN(sprite_tiles_noflip, "res/sprite_tiles_noflip.chr.gbcomp")
+    INCBIN_EXTERN(sprite_tiles_noflip)
+
+    INCBIN(sprite_tiles_bosses, "res/sprite_tiles_bosses.chr.gbcomp")
+    INCBIN_EXTERN(sprite_tiles_bosses)
+
+    INCBIN(hud_tiles, "res/hud_tiles.chr.gbcomp")
+    INCBIN_EXTERN(hud_tiles)
+#endif
+
 
 BANKREF(hud_map)
 const unsigned char hud_map[] =
