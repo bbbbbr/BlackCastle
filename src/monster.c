@@ -360,6 +360,8 @@ void update_reaper( UBYTE i )
     }
 }
 
+#ifndef MEGADUCK32K
+// Spider does not appear until level 2
 void update_spider( UBYTE i )
 {
     UBYTE tile_x,tile_y;
@@ -407,7 +409,10 @@ void update_spider( UBYTE i )
         set_sprite_tile(monster_spr1[i],ST_SPIDER3);
     }
 }
+#endif // #ifndef MEGADUCK32K
 
+#ifndef MEGADUCK32K
+// Skeleton does not appear until level 3
 void update_skeleton( UBYTE i )
 {
     UBYTE tile_x;
@@ -522,6 +527,7 @@ void update_skeleton( UBYTE i )
         monster_cnt[i]--;
     }
 }
+#endif // #ifndef MEGADUCK32K
 
 void update_monster(void) BANKED
 {
@@ -546,12 +552,14 @@ void update_monster(void) BANKED
                 case MT_REAPER:
                     update_reaper(i);
                     break;
+                #ifndef MEGADUCK32K
                 case MT_SPIDER:
                     update_spider(i);
                     break;
                 case MT_SKELETON:
                     update_skeleton(i);
                     break;
+                #endif // #ifndef #MEGADUCK32K
             }
             
             if( (monster_typ[i] != MT_SKELETON) || (monster_cnt[i] == 0) )

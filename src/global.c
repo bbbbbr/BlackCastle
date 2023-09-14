@@ -665,12 +665,14 @@ void update_level(void)
                         case OBJ_REAPER:
                             new_monster( ENEMY_SPAWN_POS_X, y, MT_REAPER );
                             break;
+                        #ifndef MEGADUCK32K
                         case OBJ_SPIDER:
                             new_monster( ENEMY_SPAWN_POS_X, y, MT_SPIDER );
                             break;
                         case OBJ_SKELETON:
                             new_monster( ENEMY_SPAWN_POS_X, y, MT_SKELETON );
                             break;
+                        #endif
                     }
 
                     j = level_data[++level_pos];
