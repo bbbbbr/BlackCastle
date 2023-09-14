@@ -29,12 +29,21 @@ extern UBYTE shadow4000;
 
 extern const UWORD frequency[];
 
+inline uint8_t translate_envelope(uint8_t value) {
+    #ifdef MEGADUCK
+        // Mega Duck has nybbles swapped for NR12, NR22, NR42 audio envelope registers
+        return ((uint8_t)(value << 4) | (uint8_t)(value >> 4));
+    #else
+        return value;
+    #endif
+}
+
 inline void set_ch1_regs(uint8_t nr10, uint8_t nr11, uint8_t nr12, uint8_t note, uint8_t nr14)
 {
     UWORD freq = frequency[note];
     NR10_REG = nr10;
     NR11_REG = nr11;
-    NR12_REG = nr12;
+    NR12_REG = translate_envelope(nr12);
     NR13_REG = freq & 0xFF;
     NR14_REG = nr14 | (freq >> 8);
 }
@@ -42,7 +51,7 @@ inline void set_ch1_regs(uint8_t nr10, uint8_t nr11, uint8_t nr12, uint8_t note,
 inline void set_ch4_regs(uint8_t nr41, uint8_t nr42, uint8_t tone, uint8_t nr44)
 {
     NR41_REG = nr41;
-    NR42_REG = nr42;
+    NR42_REG = translate_envelope(nr42);
     NR43_REG = tone;
     NR44_REG = nr44;
 }
