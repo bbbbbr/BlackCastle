@@ -1,4 +1,6 @@
+#ifndef MEGADUCK32K
 #pragma bank 1
+#endif
 
 #include "global.h"
 #include "data.h"

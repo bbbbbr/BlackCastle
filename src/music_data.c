@@ -1,4 +1,6 @@
+#ifndef MEGADUCK32K
 #pragma bank 1
+#endif
 
 #include <gbdk/platform.h>
 

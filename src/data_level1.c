@@ -1,6 +1,6 @@
-// #ifndef MEGADUCK32K
+#ifndef MEGADUCK32K
 #pragma bank 255
-// #endif
+#endif
 
 #include "global.h"
 #include "data.h"

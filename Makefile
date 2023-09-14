@@ -22,7 +22,10 @@ LCCFLAGS_nes     = -Wb-min=0
 
 LCCFLAGS += $(LCCFLAGS_$(EXT)) # This adds the current platform specific LCC Flags
 
-LCCFLAGS += -Wl-j -Wm-yoA -autobank -Wb-ext=.rel # MBC + Autobanking related flags
+ifndef MEGADUCK32K
+LCCFLAGS += -Wm-yoA -autobank -Wb-ext=.rel # MBC + Autobanking related flags
+endif
+LCCFLAGS += -Wl-j # MBC + Autobanking related flags
 LCCFLAGS += -Wl-j -Wl-w -Wm-yS
 LCCFLAGS += -debug      # Uncomment to enable debug output
 LCCFLAGS += -v -Wb-v    # Uncomment for lcc verbose output
@@ -34,6 +37,11 @@ CFLAGS += -debug
 ifdef MEGADUCK32K
 CFLAGS += -Wf-DMEGADUCK32K
 # CFLAGS += -Wf--max-allocs-per-node500000
+
+# Remove MBC from flags
+LCCFLAGS_gb      =  -Wm-yn"$(PROJECTNAME)"
+LCCFLAGS_pocket  =  -Wm-yn"$(PROJECTNAME)"
+LCCFLAGS_duck    =  -Wm-yn"$(PROJECTNAME)"
 endif
 
 # You can set the name of the ROM file here
@@ -59,7 +67,7 @@ DEPS = $(OBJS:%.o=%.d)
 
 megaduck32k:
 	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes
-	${MAKE} build-target PORT=sm83 PLAT=gb EXT=gb MEGADUCK32K=yes
+	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes
 
 # Builds all targets sequentially
 all: $(TARGETS)
