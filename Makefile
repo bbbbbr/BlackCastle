@@ -25,7 +25,7 @@ LCCFLAGS += $(LCCFLAGS_$(EXT)) # This adds the current platform specific LCC Fla
 ifndef MEGADUCK32K
 LCCFLAGS += -Wm-yoA -autobank -Wb-ext=.rel # MBC + Autobanking related flags
 endif
-LCCFLAGS += -Wl-j # MBC + Autobanking related flags
+
 LCCFLAGS += -Wl-j -Wl-w -Wm-yS
 LCCFLAGS += -debug      # Uncomment to enable debug output
 LCCFLAGS += -v -Wb-v    # Uncomment for lcc verbose output
@@ -65,12 +65,13 @@ DEPS = $(OBJS:%.o=%.d)
 
 -include $(DEPS)
 
+# Builds all targets sequentially
+all: $(TARGETS)
+
 megaduck32k:
 	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes
 	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes
 
-# Builds all targets sequentially
-all: $(TARGETS)
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
