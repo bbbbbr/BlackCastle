@@ -2,6 +2,7 @@
 #include <gbdk/incbin.h>
 #include <gbdk/gbdecompress.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "global.h"
 
@@ -27,7 +28,7 @@ UBYTE shake;
 UBYTE buf[512];
 
 #ifdef MEGADUCK32K
-    // Max size used is 512 for level1_tiles
+    // Max size used is TODO
     // uint8_t decompress_buf[512];
     // Max size used is 1024 for the level_N_N_map_meta.bin
     uint8_t decompress_buf[1024];
@@ -271,8 +272,8 @@ void init_title(void)
     level_min = 1;
 
     //background
+    SET_BANK(BANK(title_tiles));
     #ifndef MEGADUCK32K
-        SET_BANK(BANK(title_tiles));
         set_bkg_data(0,177, title_tiles);
         w = 0;
         for( i = 0; i != 20; i++ )
@@ -281,15 +282,17 @@ void init_title(void)
             w += 18;
         }
         move_bkg(0,0);
-        RESTORE_BANK();
     #else
-        SET_BANK(BANK(title_tiles));
         gb_decompress_bkg_data(0,title_tiles);
-        // gb_decompress(title_map, decompress_buf);
-        // set_bkg_tiles(0,0,20,18, decompress_buf);
-        set_bkg_tiles(0,0,20,18, title_map);
-        RESTORE_BANK();
+        gb_decompress(title_map, decompress_buf);
+        w = 0;
+        for( i = 0; i != 20; i++ )
+        {
+            set_bkg_tiles(VIEWPORT_X_OFS + i, VIEWPORT_Y_OFS, 1, 18, &decompress_buf[w]);
+            w += 18;
+        }
     #endif
+    RESTORE_BANK();
 
     //set high score
     for( i = 0; i != 4; i++ )
@@ -391,7 +394,13 @@ void init_level(void)
 
     const level_t * current_level = &levels[level_maj - 1];
     const level_minor_t * current_stage = &(current_level->minor[level_min - 1]);
-    g_current_map = current_stage->map;
+    #ifndef MEGADUCK32K
+        g_current_map = current_stage->map;
+    #else
+        SET_BANK(current_stage->bank_map);
+        gb_decompress(current_stage->map, decompress_buf);
+        g_current_map = decompress_buf;
+    #endif
     g_meta_lookup_tl = current_level->meta_lookup_tl;
     g_meta_lookup_tr = current_level->meta_lookup_tr;
     g_meta_lookup_bl = current_level->meta_lookup_bl;
@@ -474,7 +483,7 @@ void init_level(void)
 #ifdef SEGA
     set_2bpp_palette(COMPAT_PALETTE(0,1,2,3));
 #endif
-    #ifdef MEGADUCK32K
+    #ifndef MEGADUCK32K
         set_bkg_data(32,51, current_level->hud_tiles);
     #else
         // Can't set number to decompress, so hopefully it's the right amount (51)
@@ -500,21 +509,15 @@ void init_level(void)
         // level tiles
         SET_BANK(current_level->bank_tiles);
         set_bkg_data(0, 32, current_level->tiles);
-
-        SET_BANK(current_stage->bank_map);
-        level_data = current_stage->data;
-        level_len = current_stage->len;
     #else
         // level tiles
         SET_BANK(current_level->bank_tiles);
         gb_decompress_bkg_data(0,current_level->tiles);
-
-        // decompress map
-        SET_BANK(current_stage->bank_map);
-        gb_decompress(current_stage->data, decompress_buf);
-        level_data = decompress_buf;
-        level_len = current_stage->len;
     #endif // #ifndef MEGADUCK32K
+
+    SET_BANK(current_stage->bank_map);
+    level_data = current_stage->data;
+    level_len = current_stage->len;
 
     if (current_stage->boss_typ) {
         new_boss(current_stage->boss_x, current_stage->boss_y, current_stage->boss_typ);
