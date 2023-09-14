@@ -270,6 +270,7 @@ typedef struct level_t {
 
 BANKREF_EXTERN(title_tiles)
 BANKREF_EXTERN(title_map)
+BANKREF_EXTERN(font_tiles)
 BANKREF_EXTERN(sprite_tiles)
 BANKREF_EXTERN(sprite_tiles_noflip)
 BANKREF_EXTERN(sprite_tiles_bosses)

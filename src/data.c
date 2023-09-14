@@ -15,7 +15,7 @@
     INCBIN(sprite_tiles_bosses, "res/sprite_tiles_bosses.chr")
     INCBIN_EXTERN(sprite_tiles_bosses)
 
-    INCBIN(hud_tiles, "res/hud_tiles.chr")
+    INCBIN(hud_tiles, "res/hud_tiles_nofont.chr")
     INCBIN_EXTERN(hud_tiles)
 #else
     INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr.gbcomp")
@@ -27,7 +27,7 @@
     INCBIN(sprite_tiles_bosses, "res/sprite_tiles_bosses.chr.gbcomp")
     INCBIN_EXTERN(sprite_tiles_bosses)
 
-    INCBIN(hud_tiles, "res/hud_tiles.chr.gbcomp")
+    INCBIN(hud_tiles, "res/hud_tiles_nofont.chr.gbcomp")
     INCBIN_EXTERN(hud_tiles)
 #endif
 

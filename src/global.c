@@ -252,7 +252,7 @@ void copy_map_column_to_buf(UBYTE pos)
 void init_title(void)
 {
     UBYTE i,j;
-    UWORD w;
+    // UWORD w;
 
     clear_all();
     fill_bkg_rect(DEVICE_SCREEN_X_OFFSET, DEVICE_SCREEN_Y_OFFSET, DEVICE_SCREEN_WIDTH, DEVICE_SCREEN_HEIGHT, 0);
@@ -274,23 +274,15 @@ void init_title(void)
     //background
     SET_BANK(BANK(title_tiles));
     #ifndef MEGADUCK32K
-        set_bkg_data(0,177, title_tiles);
-        w = 0;
-        for( i = 0; i != 20; i++ )
-        {
-            set_bkg_tiles(VIEWPORT_X_OFS + i, VIEWPORT_Y_OFS, 1, 18, &title_map[w]);
-            w += 18;
-        }
+        set_bkg_data(128, 118, title_tiles);
+        set_bkg_data(0, 37, font_tiles);
+        set_bkg_tiles(VIEWPORT_X_OFS, VIEWPORT_Y_OFS, 20, 18, title_map);
         move_bkg(0,0);
     #else
-        gb_decompress_bkg_data(0,title_tiles);
+        gb_decompress_bkg_data(128,  title_tiles);
+        gb_decompress_bkg_data(0, font_tiles);
         gb_decompress(title_map, decompress_buf);
-        w = 0;
-        for( i = 0; i != 20; i++ )
-        {
-            set_bkg_tiles(VIEWPORT_X_OFS + i, VIEWPORT_Y_OFS, 1, 18, &decompress_buf[w]);
-            w += 18;
-        }
+        set_bkg_tiles(VIEWPORT_X_OFS, VIEWPORT_Y_OFS, 20, 18, decompress_buf);
     #endif
     RESTORE_BANK();
 
@@ -483,11 +475,20 @@ void init_level(void)
 #ifdef SEGA
     set_2bpp_palette(COMPAT_PALETTE(0,1,2,3));
 #endif
+
+    SET_BANK(BANK(font_tiles));
     #ifndef MEGADUCK32K
-        set_bkg_data(32,51, current_level->hud_tiles);
+        set_bkg_data(32, 37, font_tiles);
     #else
-        // Can't set number to decompress, so hopefully it's the right amount (51)
-        gb_decompress_bkg_data(32, current_level->hud_tiles);
+        // Can't set number to decompress, so hopefully it's the right amount (37)
+        gb_decompress_bkg_data(32, font_tiles);
+    #endif
+
+    #ifndef MEGADUCK32K
+        set_bkg_data(32 + 37,14, current_level->hud_tiles);
+    #else
+        // Can't set number to decompress, so hopefully it's the right amount (14)
+        gb_decompress_bkg_data(32 + 37, current_level->hud_tiles);
     #endif
     w = 0;
     for( i = 0; i != 20; i++ )
