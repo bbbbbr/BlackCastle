@@ -2,10 +2,11 @@
 #pragma bank 255
 #endif
 
+#include <gbdk/incbin.h>
+
 #include "global.h"
 #include "data.h"
 
-#include <gbdk/incbin.h>
 
 #ifndef SM83_CART_32K
 INCBIN(level2_tiles, "res/level2_tiles.chr")

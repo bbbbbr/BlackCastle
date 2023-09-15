@@ -31,27 +31,27 @@ BYTE monster_shot_dir[MAX_MONSTER_SHOT];
 void new_monster(UBYTE x, UBYTE y, UBYTE type) BANKED
 {
     UBYTE i;
-    
+
     for( i = 0; i != MAX_MONSTER; i++ )
     {
         if( monster_act[i] == FALSE )
         {
             monster_act[i] = TRUE;
             monster_x[i] = x;
-            monster_y[i] = y; 
+            monster_y[i] = y;
             monster_spr0[i] = get_sprite();
             monster_spr1[i] = get_sprite();
             switch( type )
             {
-                case MT_KNIGHT: 
+                case MT_KNIGHT:
                     monster_lif[i] = 16;
                     monster_dir[i] = -1;
                     break;
                 case MT_BAT:
                     monster_lif[i] = 3;
                     monster_pos[i] = y - 8;
-                    break;  
-                case MT_REAPER: 
+                    break;
+                case MT_REAPER:
                     monster_lif[i] = 12;
                     monster_pos[i] = y - 8;
                     monster_cnt[i] = (rand() & 3) + 2;
@@ -79,14 +79,14 @@ void new_monster(UBYTE x, UBYTE y, UBYTE type) BANKED
 void new_monster_shot(UBYTE x, UBYTE y) BANKED
 {
     UBYTE i;
-    
+
     for( i = 0; i != MAX_MONSTER_SHOT; i++ )
     {
         if( monster_shot_act[i] == FALSE )
         {
             monster_shot_act[i] = TRUE;
-            monster_shot_x[i] = x; 
-            monster_shot_y[i] = y; 
+            monster_shot_x[i] = x;
+            monster_shot_y[i] = y;
             monster_shot_spr[i] = get_sprite();
             set_sprite_tile(monster_shot_spr[i],ST_MONSTER_SHOT);
             if(player_x < x )
@@ -97,7 +97,7 @@ void new_monster_shot(UBYTE x, UBYTE y) BANKED
             }
             break;
         }
-    }   
+    }
 }
 
 void update_monster_shot(void) BANKED
@@ -106,7 +106,7 @@ void update_monster_shot(void) BANKED
     UBYTE tile;
     UWORD pos;
     UBYTE i;
-    
+
     //monster shot
     for( i = 0; i != MAX_MONSTER_SHOT; i++ )
     {
@@ -114,12 +114,12 @@ void update_monster_shot(void) BANKED
         {
             monster_shot_x[i] += -scroll;
             monster_shot_x[i] += monster_shot_dir[i];
-            
+
             tile_x = ((monster_shot_x[i] + 4 + scroll_pos) >> 3) - 1;
             tile_y = ((monster_shot_y[i] + 3) >> 3) - 2;
             pos = BUFPOS(tile_x, tile_y);
             tile = buf[pos];
-            
+
             if( (monster_shot_x[i] > 168) || (tile >= 16) )
             {
                 monster_shot_act[i] = FALSE;
@@ -132,10 +132,10 @@ void update_monster_shot(void) BANKED
                         if( player_dmg == 0 )
                         {
                             player_dmg = 64;
-                
+
                             player_lif--;
                             update_hud(HUD_LIFE);
-                            
+
                             if( player_lif != 0 )
                             {
                                 set_sound(SND_DAMAGE);
@@ -143,7 +143,7 @@ void update_monster_shot(void) BANKED
                                 set_sound(SND_DEAD);
                             }
                         }
-                        
+
                         monster_shot_act[i] = FALSE;
                         clear_sprite(monster_shot_spr[i]);
                         break;
@@ -151,7 +151,7 @@ void update_monster_shot(void) BANKED
                 }
             }
         }
-    }   
+    }
 }
 
 void update_knight( UBYTE i )
@@ -160,7 +160,7 @@ void update_knight( UBYTE i )
     UBYTE tile_y1,tile_y2;
     UWORD pos1,pos2;
     UBYTE tile1, tile2;
-    
+
     if( (monster_ani[i] & 7) == 0 )
     {
         if( monster_dir[i] == 1 )
@@ -172,17 +172,17 @@ void update_knight( UBYTE i )
                 tile_x = ((monster_x[i] + 11 + scroll_pos) >> 3) - 1;
                 tile_y1 = ((monster_y[i] + 16) >> 3) - 2;
                 tile_y2 = ((monster_y[i] + 14) >> 3) - 2;
-            
+
                 pos1 = BUFPOS(tile_x, tile_y1);
                 pos2 = BUFPOS(tile_x, tile_y2);
-            
+
                 tile1 = buf[pos1];
                 tile2 = buf[pos2];
-            
+
                 if( (tile1 < 16) || (tile2 >= 16) )
                 {
                     monster_dir[i] = -1;
-                } 
+                }
                 monster_x[i] += monster_dir[i];
             }
         } else {
@@ -193,21 +193,21 @@ void update_knight( UBYTE i )
                 tile_x = ((monster_x[i] + 4 + scroll_pos) >> 3) - 1;
                 tile_y1 = ((monster_y[i] + 16) >> 3) - 2;
                 tile_y2 = ((monster_y[i] + 14) >> 3) - 2;
-                
+
                 pos1 = BUFPOS(tile_x, tile_y1);
                 pos2 = BUFPOS(tile_x, tile_y2);
-                
+
                 tile1 = buf[pos1];
                 tile2 = buf[pos2];
-                
+
                 if( (tile1 < 16) || (tile2 >= 16) )
                 {
                     monster_dir[i] = 1;
-                } 
+                }
                 monster_x[i] += monster_dir[i];
             }
         }
-    }   
+    }
 
     if( monster_dir[i] == 1 )
     {
@@ -236,7 +236,7 @@ void update_knight( UBYTE i )
 }
 
 void update_bat( UBYTE i )
-{   
+{
     if( (monster_ani[i] & 15) == 0 )
     {
         monster_dir[i] = rand() & 7;
@@ -253,7 +253,7 @@ void update_bat( UBYTE i )
             monster_dir[i] = 1;
         }
     }
-    
+
     if( (monster_ani[i] & 1) == 0 )
     {
         switch( monster_dir[i] )
@@ -288,7 +288,7 @@ void update_bat( UBYTE i )
                 break;
         }
     }
-    
+
     if( monster_ani[i] & 8 )
     {
         set_sprite_tile(monster_spr0[i],ST_BAT0);
@@ -317,7 +317,7 @@ void update_reaper( UBYTE i )
             monster_dir[i] = 0;
         }
     }
-    
+
     if( (monster_ani[i] & 1) == 0 )
     {
         switch( monster_dir[i] )
@@ -340,7 +340,7 @@ void update_reaper( UBYTE i )
                 break;
         }
     }
-    
+
     if( monster_cnt[i] != 0 )
     {
         monster_cnt[i]--;
@@ -348,16 +348,32 @@ void update_reaper( UBYTE i )
         new_monster_shot( monster_x[i] + 4, monster_y[i] + 6);
         monster_cnt[i] = (rand() & 3) + 2;
         monster_cnt[i] = monster_cnt[i] << 5;
-    }   
-    
-    if( monster_ani[i] & 8 )
-    {
-        set_sprite_tile(monster_spr0[i],ST_DEAMON0);
-        set_sprite_tile(monster_spr1[i],ST_DEAMON1);
-    } else {
-        set_sprite_tile(monster_spr0[i],ST_DEAMON2);
-        set_sprite_tile(monster_spr1[i],ST_DEAMON3);
     }
+
+    #ifndef SM83_CART_32K
+        if( monster_ani[i] & 8 )
+        {
+            set_sprite_tile(monster_spr0[i],ST_DEAMON0);
+            set_sprite_tile(monster_spr1[i],ST_DEAMON1);
+        } else {
+            set_sprite_tile(monster_spr0[i],ST_DEAMON2);
+            set_sprite_tile(monster_spr1[i],ST_DEAMON3);
+        }
+    #else
+        // sdcc compiler crash fix
+        static uint8_t temp;
+        temp = monster_ani[i];
+        if( temp & 8 )
+        {
+            set_sprite_tile(monster_spr0[i],ST_DEAMON0);
+            set_sprite_tile(monster_spr1[i],ST_DEAMON1);
+        }
+        // else {
+        if (!( temp & 8 )) {
+            set_sprite_tile(monster_spr0[i],ST_DEAMON2);
+            set_sprite_tile(monster_spr1[i],ST_DEAMON3);
+        }
+    #endif // #ifndef SM83_CART_32K
 }
 
 #ifndef SM83_CART_32K
@@ -367,7 +383,7 @@ void update_spider( UBYTE i )
     UBYTE tile_x,tile_y;
     UBYTE tile;
     UWORD pos;
-    
+
     if( ((player_x + 16) >= monster_x[i]) && (player_x <= (monster_x[i] + 16)) )
     {
         if( monster_dir[i] == 0 )
@@ -375,11 +391,11 @@ void update_spider( UBYTE i )
             monster_dir[i] = 2;
         }
     }
-    
+
     if( monster_dir[i] == 2 )
     {
         monster_y[i] += monster_dir[i];
-        
+
         tile_x = ((monster_x[i] + 4 + scroll_pos) >> 3) - 1;
         tile_y = ((monster_y[i] + 16) >> 3) - 2;
         pos = BUFPOS(tile_x, tile_y);
@@ -387,19 +403,19 @@ void update_spider( UBYTE i )
         if( tile >= 16 )
         {
             monster_dir[i] = -1;
-        }   
+        }
     } else {
         if( (monster_ani[i] & 1) == 0 )
         {
             monster_y[i] += monster_dir[i];
         }
-        
+
         if( monster_y[i] == monster_cnt[i] )
         {
             monster_dir[i] = 0;
         }
     }
-    
+
     if( monster_ani[i] & 16 )
     {
         set_sprite_tile(monster_spr0[i],ST_SPIDER0);
@@ -419,7 +435,7 @@ void update_skeleton( UBYTE i )
     UBYTE tile_y1,tile_y2;
     UWORD pos1,pos2;
     UBYTE tile1, tile2;
-        
+
     if( monster_cnt[i] == 0 )
     {
         if( (monster_ani[i] & 7) == 0 )
@@ -433,17 +449,17 @@ void update_skeleton( UBYTE i )
                     tile_x = ((monster_x[i] + 11 + scroll_pos) >> 3) - 1;
                     tile_y1 = ((monster_y[i] + 16) >> 3) - 2;
                     tile_y2 = ((monster_y[i] + 14) >> 3) - 2;
-                
+
                     pos1 = BUFPOS(tile_x, tile_y1);
                     pos2 = BUFPOS(tile_x, tile_y2);
-                
+
                     tile1 = buf[pos1];
                     tile2 = buf[pos2];
-                
+
                     if( (tile1 < 16) || (tile2 >= 16) )
                     {
                         monster_dir[i] = -1;
-                    } 
+                    }
                     monster_x[i] += monster_dir[i];
                 }
             } else {
@@ -454,22 +470,22 @@ void update_skeleton( UBYTE i )
                     tile_x = ((monster_x[i] + 4 + scroll_pos) >> 3) - 1;
                     tile_y1 = ((monster_y[i] + 16) >> 3) - 2;
                     tile_y2 = ((monster_y[i] + 14) >> 3) - 2;
-                    
+
                     pos1 = BUFPOS(tile_x, tile_y1);
                     pos2 = BUFPOS(tile_x, tile_y2);
-                    
+
                     tile1 = buf[pos1];
                     tile2 = buf[pos2];
-                    
+
                     if( (tile1 < 16) || (tile2 >= 16) )
                     {
                         monster_dir[i] = 1;
-                    } 
+                    }
                     monster_x[i] += monster_dir[i];
                 }
             }
         }
-        
+
         if( monster_dir[i] == 1 )
         {
             if( monster_ani[i] & 16 )
@@ -501,9 +517,9 @@ void update_skeleton( UBYTE i )
             {
                 set_sprite_tile(monster_spr0[i],ST_SKELETON4);
                 set_sprite_tile(monster_spr1[i],ST_SKELETON5);
-            } 
+            }
             if( monster_cnt[i] == 122 )
-            {   
+            {
                 set_sprite_tile(monster_spr0[i],ST_SKELETON6);
                 set_sprite_tile(monster_spr1[i],ST_SKELETON7);
             }
@@ -514,9 +530,9 @@ void update_skeleton( UBYTE i )
             {
                 set_sprite_tile(monster_spr0[i],ST_SKELETON5);
                 set_sprite_tile(monster_spr1[i],ST_SKELETON4);
-            } 
+            }
             if( monster_cnt[i] == 122 )
-            {   
+            {
                 set_sprite_tile(monster_spr0[i],ST_SKELETON7);
                 set_sprite_tile(monster_spr1[i],ST_SKELETON6);
             }
@@ -533,14 +549,14 @@ void update_monster(void) BANKED
 {
     UBYTE i,j;
     UBYTE dmg;
-    
+
     //monster
     for( i = 0; i != MAX_MONSTER; i++ )
     {
         if( monster_act[i] == TRUE )
         {
             monster_x[i] += -scroll;
-                        
+
             switch( monster_typ[i] )
             {
                 case MT_KNIGHT:
@@ -561,7 +577,7 @@ void update_monster(void) BANKED
                     break;
                 #endif // #ifndef #SM83_CART_32K
             }
-            
+
             if( (monster_typ[i] != MT_SKELETON) || (monster_cnt[i] == 0) )
             {
                 if(((player_x + 10) >= monster_x[i]) && (player_x <= (monster_x[i] + 10)))
@@ -571,10 +587,10 @@ void update_monster(void) BANKED
                         if( player_dmg == 0 )
                         {
                             player_dmg = 64;
-                
+
                             player_lif--;
                             update_hud(HUD_LIFE);
-                            
+
                             if( player_lif != 0 )
                             {
                                 set_sound(SND_DAMAGE);
@@ -584,7 +600,7 @@ void update_monster(void) BANKED
                         }
                     }
                 }
-            
+
                 for( j = 0; j != MAX_PLAYER_SHOT; j++ )
                 {
                     if( player_shot_act[j] == TRUE )
@@ -600,7 +616,7 @@ void update_monster(void) BANKED
                                 } else {
                                     dmg = 3;
                                 }
-                                                                
+
                                 if( monster_lif[i] > dmg )
                                 {
                                     monster_lif[i] -= dmg;
@@ -613,7 +629,7 @@ void update_monster(void) BANKED
                                         monster_act[i] = FALSE;
                                         clear_sprite(monster_spr0[i]);
                                         clear_sprite(monster_spr1[i]);
-                                        
+
                                         switch( monster_typ[i] )
                                         {
                                             case MT_KNIGHT:
@@ -634,7 +650,7 @@ void update_monster(void) BANKED
                                         set_sound(SND_BREAK);
                                     }
                                 }
-                                
+
                                 player_shot_act[j] = FALSE;
                                 clear_sprite(player_shot_spr[j]);
                                 break;
@@ -643,14 +659,14 @@ void update_monster(void) BANKED
                     }
                 }
             }
-            
+
             monster_ani[i]++;
-            
+
             if( monster_dmg[i] != 0 )
             {
                 monster_dmg[i]--;
             }
-            
+
             if( (monster_x[i] <= 240) && (monster_x[i] >= 184))
             {
                 monster_act[i] = 0;

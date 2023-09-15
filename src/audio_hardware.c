@@ -1,6 +1,8 @@
 #include <gbdk/platform.h>
 #include <stdint.h>
 
+#include "global.h"
+
 
 uint8_t translate_envelope(uint8_t value) {
     #ifdef MEGADUCK

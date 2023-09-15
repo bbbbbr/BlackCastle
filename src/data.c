@@ -2,10 +2,11 @@
 #pragma bank 1
 #endif
 
+#include <gbdk/incbin.h>
+
 #include "global.h"
 #include "data.h"
 
-#include <gbdk/incbin.h>
 
 #ifndef SM83_CART_32K
     INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr")

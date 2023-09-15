@@ -3,6 +3,21 @@
 
 #include <gbdk/platform.h>
 
+#define SET_BANK(N)     old_bank = _current_bank, SWITCH_ROM(N)
+#define RESTORE_BANK()  SWITCH_ROM(old_bank)
+
+// This should be after gbdk/platform.h and before other includes since it will undef BANKED
+#ifdef SM83_CART_32K
+    // No banked function calls for 32k
+    #undef BANKED
+    #define BANKED // NONBANKED
+    // No bank switching for 32k
+    #undef  SET_BANK
+    #undef  RESTORE_BANK
+    #define SET_BANK(N)
+    #define RESTORE_BANK()
+#endif
+
 #include "data.h"
 #include "rand.h"
 #include "player.h"
@@ -58,9 +73,6 @@
 #define KEY_DEBOUNCE(K) ((input & (K)) && (old_input & (K)))
 #define KEY_TICKED(K)   ((input & (K)) && !(old_input & (K)))
 #define KEY_RELEASED(K) ((old_input & (K)) && !(input & (K)))
-
-#define SET_BANK(N)     old_bank = _current_bank, SWITCH_ROM(N)
-#define RESTORE_BANK()  SWITCH_ROM(old_bank)
 
 #define GS_TITLE                0
 #define GS_LEVEL                1

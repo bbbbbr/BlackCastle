@@ -1,8 +1,10 @@
 #include <gbdk/platform.h>
 #include <gbdk/incbin.h>
+
 #ifdef SM83_CART_32K
 #include <gbdk/gbdecompress.h>
 #endif
+
 #include <stdint.h>
 #include <string.h>
 

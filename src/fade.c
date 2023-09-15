@@ -3,6 +3,8 @@
 #endif
 
 #include <gbdk/platform.h>
+
+#include "global.h"
 #include "music.h"
 
 static const palette_color_t palettes[4][4] =
