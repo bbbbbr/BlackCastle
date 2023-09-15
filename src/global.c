@@ -1,6 +1,8 @@
 #include <gbdk/platform.h>
 #include <gbdk/incbin.h>
+#ifdef MEGADUCK32K
 #include <gbdk/gbdecompress.h>
+#endif
 #include <stdint.h>
 #include <string.h>
 
