@@ -6,6 +6,7 @@ ifndef GBDK_HOME
 GBDK_HOME = ../../gbdk-2020/build/gbdk/
 endif
 LCC = $(GBDK_HOME)bin/lcc
+GBCOMP = $(GBDK_HOME)bin/gbcompress
 
 # Set platforms to build here, spaced separated. (These are in the separate Makefile.targets)
 # They can also be built/cleaned individually: "make gg" and "make gg-clean"
@@ -50,9 +51,9 @@ PROJECTNAME = blackcastle
 # EXT?=gb # Only sets extension to default (game boy .gb) if not populated
 SRCDIR      = src
 SRCPLAT     = src/$(PORT)
-OBJDIR      = obj/$(EXT)
+OBJDIR      = obj/$(EXT)$(CARTTYPE)
 RESDIR      = res
-BINDIR      = build/$(EXT)
+BINDIR      = build/$(EXT)$(CARTTYPE)
 MKDIRS      = $(OBJDIR) $(BINDIR) # See bottom of Makefile for directory auto-creation
 
 BINS	    = $(OBJDIR)/$(PROJECTNAME).$(EXT)
@@ -68,9 +69,32 @@ DEPS = $(OBJS:%.o=%.d)
 # Builds all targets sequentially
 all: $(TARGETS)
 
-megaduck32k:
-	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes
-	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes
+32k:
+	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes CARTTYPE=_32k
+	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes CARTTYPE=_32k
+
+clean32k:
+	${MAKE} clean-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes CARTTYPE=_32k
+	${MAKE} clean-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes CARTTYPE=_32k
+
+compressassets:
+	$(GBCOMP) -v $(RESDIR)/title_map.bin           $(RESDIR)/title_map.bin.gbcomp
+	$(GBCOMP) -v $(RESDIR)/title_bg.chr            $(RESDIR)/title_bg.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/font_tiles.chr          $(RESDIR)/font_tiles.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level1_tiles.chr        $(RESDIR)/level1_tiles.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level_1_4_map_meta.bin  $(RESDIR)/level_1_4_map_meta.bin.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level_1_3_map_meta.bin  $(RESDIR)/level_1_3_map_meta.bin.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level_1_2_map_meta.bin  $(RESDIR)/level_1_2_map_meta.bin.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level_1_1_map_meta.bin  $(RESDIR)/level_1_1_map_meta.bin.gbcomp
+	$(GBCOMP) -v $(RESDIR)/level1_tiles.chr        $(RESDIR)/level1_tiles.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/sprite_tiles_noflip.chr $(RESDIR)/sprite_tiles_noflip.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/sprite_tiles_flip.chr   $(RESDIR)/sprite_tiles_flip.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/sprite_tiles_bosses.chr $(RESDIR)/sprite_tiles_bosses.chr.gbcomp
+	$(GBCOMP) -v $(RESDIR)/hud_tiles_nofont.chr    $(RESDIR)/hud_tiles_nofont.chr.gbcomp
+	# mark files that include these assets for rebuild
+	touch $(SRCDIR)/data.c
+	touch $(SRCDIR)/title_data.c
+	touch $(SRCDIR)/data_level1.c
 
 
 # Compile .c files in "src/" to .o object files
