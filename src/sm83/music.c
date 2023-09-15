@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 1
 #endif
 
@@ -165,7 +165,7 @@ void set_music(UBYTE song) BANKED
             music_ptr_ch4 = music_data_ch4;
             music_cnt_ch4 = 0;
             break;
-        #ifndef MEGADUCK32K
+        #ifndef SM83_CART_32K
         case LEVEL2_MUSIC:
             music_data_ch1 = level2_music_lead;
             music_ptr_ch1 = music_data_ch1;
@@ -218,7 +218,7 @@ void set_music(UBYTE song) BANKED
             music_ptr_ch4 = music_data_ch4;
             music_cnt_ch4 = 0;
             break;
-        #endif // #ifndef MEGADUCK32K
+        #endif // #ifndef SM83_CART_32K
         case END_MUSIC:
             music_data_ch1 = end_music_lead;
             music_ptr_ch1 = music_data_ch1;

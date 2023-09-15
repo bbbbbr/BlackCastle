@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 1
 #endif
 

@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 1
 #endif
 
@@ -7,7 +7,7 @@
 
 #include <gbdk/incbin.h>
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
     INCBIN(sprite_tiles, "res/sprite_tiles_flip.chr")
     INCBIN_EXTERN(sprite_tiles)
 

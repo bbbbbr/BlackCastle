@@ -1,6 +1,6 @@
 #include <gbdk/platform.h>
 #include <gbdk/incbin.h>
-#ifdef MEGADUCK32K
+#ifdef SM83_CART_32K
 #include <gbdk/gbdecompress.h>
 #endif
 #include <stdint.h>
@@ -29,7 +29,7 @@ UBYTE shake;
 // Rolling buffer storing 32 columns of the level
 UBYTE buf[512];
 
-#ifdef MEGADUCK32K
+#ifdef SM83_CART_32K
     // Max size used is TODO
     // uint8_t decompress_buf[512];
     // Max size used is 1024 for the level_N_N_map_meta.bin
@@ -134,7 +134,7 @@ const level_t levels[] = {
             }
         }
     },
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
     {
         .bank_tiles = BANK(level2_tiles),
         .tiles = level2_tiles,
@@ -232,7 +232,7 @@ const level_t levels[] = {
             }
         }
     }
-    #endif // #ifndef MEGADUCK32K
+    #endif // #ifndef SM83_CART_32K
 };
 
 void copy_map_column_to_buf(UBYTE pos)
@@ -275,7 +275,7 @@ void init_title(void)
 
     //background
     SET_BANK(BANK(title_tiles));
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         set_bkg_data(128, 118, title_tiles);
         set_bkg_data(0, 37, font_tiles);
         set_bkg_tiles(VIEWPORT_X_OFS, VIEWPORT_Y_OFS, 20, 18, title_map);
@@ -388,7 +388,7 @@ void init_level(void)
 
     const level_t * current_level = &levels[level_maj - 1];
     const level_minor_t * current_stage = &(current_level->minor[level_min - 1]);
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         g_current_map = current_stage->map;
     #else
         SET_BANK(current_stage->bank_map);
@@ -409,7 +409,7 @@ void init_level(void)
     set_2bpp_palette(COMPAT_PALETTE(0,1,4,3));
 #endif
     // Player/player shots/monsters which can flip
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         set_sprite_data(0, ST_NUM_FLIP, current_level->sprites);
     #else
         // Can't set number to decompress, so hopefully it's the right amount (ST_NUM_FLIP)
@@ -421,7 +421,7 @@ void init_level(void)
 #endif
     // These sprite tiles don't need mirroring
     // Leave gap of 2 8x16 tiles to avoid boss tiles overwriting them
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         set_sprite_data(2*ST_NUM_FLIP + 4, ST_NUM_NOFLIP, current_level->sprites_noflip);
     #else
         // Can't set number to decompress, so hopefully it's the right amount (ST_NUM_NOFLIP)
@@ -430,7 +430,7 @@ void init_level(void)
 
     if(level_min == 4)
     {
-        #ifndef MEGADUCK32K
+        #ifndef SM83_CART_32K
             // Boss sprite tiles (no flipping needed - overwrite monster tiles)
             set_sprite_data(ST_BOSS_BAT0 & 0xFE, ST_NUM_BOSS, current_level->sprites_bosses);
         #else
@@ -479,14 +479,14 @@ void init_level(void)
 #endif
 
     SET_BANK(BANK(font_tiles));
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         set_bkg_data(32, 37, font_tiles);
     #else
         // Can't set number to decompress, so hopefully it's the right amount (37)
         gb_decompress_bkg_data(32, font_tiles);
     #endif
 
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         set_bkg_data(32 + 37,14, current_level->hud_tiles);
     #else
         // Can't set number to decompress, so hopefully it's the right amount (14)
@@ -508,7 +508,7 @@ void init_level(void)
     update_hud(HUD_LEVEL);
 
     // level stage maps, data and settings
-    #ifndef MEGADUCK32K
+    #ifndef SM83_CART_32K
         // level tiles
         SET_BANK(current_level->bank_tiles);
         set_bkg_data(0, 32, current_level->tiles);
@@ -516,7 +516,7 @@ void init_level(void)
         // level tiles
         SET_BANK(current_level->bank_tiles);
         gb_decompress_bkg_data(0,current_level->tiles);
-    #endif // #ifndef MEGADUCK32K
+    #endif // #ifndef SM83_CART_32K
 
     SET_BANK(current_stage->bank_map);
     level_data = current_stage->data;
@@ -667,7 +667,7 @@ void update_level(void)
                         case OBJ_REAPER:
                             new_monster( ENEMY_SPAWN_POS_X, y, MT_REAPER );
                             break;
-                        #ifndef MEGADUCK32K
+                        #ifndef SM83_CART_32K
                         case OBJ_SPIDER:
                             new_monster( ENEMY_SPAWN_POS_X, y, MT_SPIDER );
                             break;
@@ -757,7 +757,7 @@ void draw_level(void)
                     move_sprite_clip(boss_spr1,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 16);
                     move_sprite_clip(boss_spr2,  SPRITE_OFS_X + boss_x + 16, SPRITE_OFS_Y + boss_y + 16);
                     break;
-            #ifndef MEGADUCK32K
+            #ifndef SM83_CART_32K
                 case BT_MINOTAUR:
                     move_sprite_clip(boss_spr0,  SPRITE_OFS_X + boss_x,      SPRITE_OFS_Y + boss_y + 16);
                     move_sprite_clip(boss_spr1,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 16);
@@ -772,7 +772,7 @@ void draw_level(void)
                     move_sprite_clip(boss_spr2,  SPRITE_OFS_X + boss_x,      SPRITE_OFS_Y + boss_y + 32);
                     move_sprite_clip(boss_spr3,  SPRITE_OFS_X + boss_x + 8,  SPRITE_OFS_Y + boss_y + 32);
                     break;
-            #endif // #ifndef MEGADUCK32K
+            #endif // #ifndef SM83_CART_32K
             }
 
 
@@ -784,7 +784,7 @@ void draw_level(void)
                     hide_sprite(boss_spr1);
                     hide_sprite(boss_spr2);
                     break;
-            #ifndef MEGADUCK32K
+            #ifndef SM83_CART_32K
                 case BT_MINOTAUR:
                     hide_sprite(boss_spr0);
                     hide_sprite(boss_spr1);
@@ -799,7 +799,7 @@ void draw_level(void)
                     hide_sprite(boss_spr2);
                     hide_sprite(boss_spr3);
                     break;
-            #endif // #ifndef MEGADUCK32K
+            #endif // #ifndef SM83_CART_32K
             }
         }
     }
@@ -914,7 +914,7 @@ void enter_level(void)
             DISPLAY_OFF;
             level_maj++;
             level_min = 1;
-            #ifndef MEGADUCK32K
+            #ifndef SM83_CART_32K
                 if( level_maj == 4 )
                 {
                     game_state = GS_END;

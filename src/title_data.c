@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 255
 #endif
 
@@ -7,7 +7,7 @@
 
 #include <gbdk/incbin.h>
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
     INCBIN(title_tiles, "res/title_bg.chr")
     INCBIN_EXTERN(title_tiles)
 
@@ -25,4 +25,4 @@
 
     INCBIN(font_tiles, "res/font_tiles.chr.gbcomp")
     INCBIN_EXTERN(font_tiles)
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K

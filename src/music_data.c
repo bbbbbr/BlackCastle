@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 1
 #endif
 
@@ -169,7 +169,7 @@ const unsigned char level1_music_rythm[] =
     0
 };
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 const unsigned char level2_music_lead[] =
 {
     //A
@@ -330,7 +330,7 @@ const unsigned char level3_music_rythm[] =
     0
 };
 
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K
 
 const unsigned char end_music_lead[] =
 {

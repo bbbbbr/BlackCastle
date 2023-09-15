@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 2
 #endif
 
@@ -116,7 +116,7 @@ const unsigned char level1_3_data[] =
     0
 };
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 const unsigned char level2_1_data[] =
 {
     22,10,OBJ_KNIGHT,
@@ -336,4 +336,4 @@ const unsigned char level3_3_data[] =
     241,2,OBJ_SPIDER,
     0
 };
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K

@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 255
 #endif
 
@@ -7,7 +7,7 @@
 
 #include <gbdk/incbin.h>
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 INCBIN(level2_tiles, "res/level2_tiles.chr")
 INCBIN_EXTERN(level2_tiles)
 
@@ -31,4 +31,4 @@ INCBIN(level2_meta_lookup_bl, "res/level2_meta_lookup_bl.bin")
 INCBIN_EXTERN(level2_meta_lookup_bl)
 INCBIN(level2_meta_lookup_br, "res/level2_meta_lookup_br.bin")
 INCBIN_EXTERN(level2_meta_lookup_br)
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K

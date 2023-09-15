@@ -23,7 +23,7 @@ LCCFLAGS_nes     = -Wb-min=0
 
 LCCFLAGS += $(LCCFLAGS_$(EXT)) # This adds the current platform specific LCC Flags
 
-ifndef MEGADUCK32K
+ifndef SM83_CART_32K
 LCCFLAGS += -Wm-yoA -autobank -Wb-ext=.rel # MBC + Autobanking related flags
 endif
 
@@ -35,8 +35,8 @@ LCCFLAGS += -Wl-u
 CFLAGS = -Wf-Iinclude -Wf-MMD
 CFLAGS += -debug
 
-ifdef MEGADUCK32K
-CFLAGS += -Wf-DMEGADUCK32K
+ifdef SM83_CART_32K
+CFLAGS += -Wf-DSM83_CART_32K
 # CFLAGS += -Wf--max-allocs-per-node500000
 
 # Remove MBC from flags
@@ -70,12 +70,12 @@ DEPS = $(OBJS:%.o=%.d)
 all: $(TARGETS)
 
 32k:
-	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes CARTTYPE=_32k
-	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes CARTTYPE=_32k
+	${MAKE} build-target PORT=sm83 PLAT=duck EXT=duck SM83_CART_32K=yes CARTTYPE=_32k
+	${MAKE} build-target PORT=sm83 PLAT=gb   EXT=gb   SM83_CART_32K=yes CARTTYPE=_32k
 
 clean32k:
-	${MAKE} clean-target PORT=sm83 PLAT=duck EXT=duck MEGADUCK32K=yes CARTTYPE=_32k
-	${MAKE} clean-target PORT=sm83 PLAT=gb   EXT=gb   MEGADUCK32K=yes CARTTYPE=_32k
+	${MAKE} clean-target PORT=sm83 PLAT=duck EXT=duck SM83_CART_32K=yes CARTTYPE=_32k
+	${MAKE} clean-target PORT=sm83 PLAT=gb   EXT=gb   SM83_CART_32K=yes CARTTYPE=_32k
 
 compressassets:
 	$(GBCOMP) -v $(RESDIR)/title_map.bin           $(RESDIR)/title_map.bin.gbcomp

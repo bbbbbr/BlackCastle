@@ -1,4 +1,4 @@
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 #pragma bank 255
 #endif
 
@@ -360,7 +360,7 @@ void update_reaper( UBYTE i )
     }
 }
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 // Spider does not appear until level 2
 void update_spider( UBYTE i )
 {
@@ -409,9 +409,9 @@ void update_spider( UBYTE i )
         set_sprite_tile(monster_spr1[i],ST_SPIDER3);
     }
 }
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K
 
-#ifndef MEGADUCK32K
+#ifndef SM83_CART_32K
 // Skeleton does not appear until level 3
 void update_skeleton( UBYTE i )
 {
@@ -527,7 +527,7 @@ void update_skeleton( UBYTE i )
         monster_cnt[i]--;
     }
 }
-#endif // #ifndef MEGADUCK32K
+#endif // #ifndef SM83_CART_32K
 
 void update_monster(void) BANKED
 {
@@ -552,14 +552,14 @@ void update_monster(void) BANKED
                 case MT_REAPER:
                     update_reaper(i);
                     break;
-                #ifndef MEGADUCK32K
+                #ifndef SM83_CART_32K
                 case MT_SPIDER:
                     update_spider(i);
                     break;
                 case MT_SKELETON:
                     update_skeleton(i);
                     break;
-                #endif // #ifndef #MEGADUCK32K
+                #endif // #ifndef #SM83_CART_32K
             }
             
             if( (monster_typ[i] != MT_SKELETON) || (monster_cnt[i] == 0) )
